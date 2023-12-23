@@ -1,0 +1,47 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+	for rc in ~/.bashrc.d/*; do
+		if [ -f "$rc" ]; then
+			. "$rc"
+		fi
+	done
+fi
+
+unset rc
+
+# flyctl
+export FLYCTL_INSTALL="/home/${USER}/.local/fly"
+export PATH="${PATH}:${FLYCTL_INSTALL}/bin"
+
+# Golang
+export PATH=${PATH}:/usr/local/go/bin:/home/${USER}/go/bin
+
+# kubectl
+alias k=kubectl
+complete -o default -F __start_kubectl k
+export KUBE_EDITOR=$(which vi)
+export KUBECONFIG=/home/${USER}/.config/kube
+
+# Linkerd
+export PATH="${PATH}:/home/${USER}/.local/linkerd2/bin"
+
+# Oracle Cloud Infrastructure CLI
+[[ -e "/usr/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh" ]] && source "/usr/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh"
+
