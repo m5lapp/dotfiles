@@ -37,7 +37,7 @@ export PATH=${PATH}:/usr/local/go/bin:/home/${USER}/go/bin
 alias k=kubectl
 complete -o default -F __start_kubectl k
 export KUBE_EDITOR=$(which vi)
-export KUBECONFIG=/home/${USER}/.config/kube
+export KUBECONFIG=/home/${USER}/.config/kube/config
 
 # Linkerd
 export PATH="${PATH}:/home/${USER}/.local/linkerd2/bin"
