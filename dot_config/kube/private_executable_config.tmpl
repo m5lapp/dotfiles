@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority-data: {{ (bitwardenFields "item" "k3s.prod").certificate_authority_data.value }}
+    server: {{ (bitwardenFields "item" "k3s.prod").server.value }}
+  name: prod
+contexts:
+- context:
+    cluster: prod
+    {{- /*
+      As the default namespace is dynamic, we can look it up when the template
+      is executed to get the current value. This prevents chezmoi diff from
+      seeing differences between the source and the deployed version of the
+      file. See:
+      https://www.chezmoi.io/user-guide/manage-different-types-of-file/#manage-part-but-not-all-of-a-file
+    */}}
+    namespace: {{ output "kubectl" "config" "view" "--context" "prod" "--minify" "-o" "go-template={{ (index .contexts 0).context.namespace }}" }}
+    user: prod_user
+  name: prod
+current-context: {{ output "kubectl" "config" "current-context" | trim }}
+preferences: {}
+users:
+- name: prod_user
+  user:
+    client-certificate-data: {{ (bitwardenFields "item" "k3s.prod").client_certificate_data.value }}
+    client-key-data: {{ (bitwardenFields "item" "k3s.prod").client_key_data.value }}
+

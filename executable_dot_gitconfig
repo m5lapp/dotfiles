@@ -1,0 +1,8 @@
+[init]
+	defaultBranch = main
+[user]
+	email = 64704718+m5lapp@users.noreply.github.com
+	name = m5lapp
+[http]
+	cookiefile = ~/.gitcookies
+
