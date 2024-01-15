@@ -7,3 +7,4 @@ vim.opt.signcolumn = "auto"
 vim.opt.spell = true
 vim.opt.tabstop = 4
 vim.opt.wrap = false
+

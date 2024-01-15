@@ -14,11 +14,20 @@ contexts:
       seeing differences between the source and the deployed version of the
       file. See:
       https://www.chezmoi.io/user-guide/manage-different-types-of-file/#manage-part-but-not-all-of-a-file
+
+      An or-condition is used to allow the config to still be deployed with a
+      default value, even when the kubectl command fails for whatever reason
+      (even if kubectl is not yet installed). To do this, the command must be
+      passed in a string to the bash command.
     */}}
-    namespace: {{ output "kubectl" "config" "view" "--context" "prod" "--minify" "-o" "go-template={{ (index .contexts 0).context.namespace }}" }}
+    namespace: {{
+        output "bash" "-c"
+            "kubectl config view --context prod --minify -o go-template='{{ (index .contexts 0).context.namespace }}' || echo default"
+        | trim
+    }}
     user: prod_user
   name: prod
-current-context: {{ output "kubectl" "config" "current-context" | trim }}
+current-context: {{ output "bash" "-c" "kubectl config current-context || prod" | trim }}
 preferences: {}
 users:
 - name: prod_user

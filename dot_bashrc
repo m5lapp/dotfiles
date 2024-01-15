@@ -29,9 +29,12 @@ unset rc
 # flyctl
 export FLYCTL_INSTALL="/home/${USER}/.local/fly"
 export PATH="${PATH}:${FLYCTL_INSTALL}/bin"
+complete -o default -F __start_flyctl fly
 
 # Golang
-export PATH=${PATH}:/usr/local/go/bin:/home/${USER}/go/bin
+export PATH=${PATH}:/usr/local/go/bin:${HOME}/.local/share/go/bin
+# GOPATH gets configured in the file $HOME/.config/go/env.
+go env -w GOPATH=${HOME}/.local/share/go
 
 # kubectl
 alias k=kubectl
@@ -42,6 +45,29 @@ export KUBECONFIG=/home/${USER}/.config/kube/config
 # Linkerd
 export PATH="${PATH}:/home/${USER}/.local/linkerd2/bin"
 
-# Oracle Cloud Infrastructure CLI
-[[ -e "/usr/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh" ]] && source "/usr/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh"
+# Oracle Cloud Infrastructure (OCI) CLI
+[[ -e "/usr/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh" ]] && \
+    source "/usr/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh"
 
+# Terraform
+complete -C /usr/bin/terraform terraform
+
+# Check if we're inside a container. If so, create aliases to be able to run
+# common host commands such as flatpak and podman from inside the container.
+if [ -e /run/.containerenv ] || [ -e /.dockerenv ]
+then
+	# Ensure the flatpak-spawn command is available.
+	if command -v flatpak-spawn &>/dev/null
+	then
+		alias docker="/usr/bin/env -- flatpak-spawn --host docker"
+		alias flatpak="/usr/bin/env -- flatpak-spawn --host flatpak"
+		alias podman="/usr/bin/env -- flatpak-spawn --host podman"
+		alias rpm-ostree="/usr/bin/env -- flatpak-spawn --host rpm-ostree"
+	fi
+fi
+
+# Load the Starship command prompt if it exists.
+if command -v starship &>/dev/null
+then
+	eval "$(starship init bash)"
+fi
