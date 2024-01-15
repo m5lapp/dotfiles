@@ -33,8 +33,12 @@ complete -o default -F __start_flyctl fly
 
 # Golang
 export PATH=${PATH}:/usr/local/go/bin:${HOME}/.local/share/go/bin
-# GOPATH gets configured in the file $HOME/.config/go/env.
-go env -w GOPATH=${HOME}/.local/share/go
+# GOPATH gets configured in the file $HOME/.config/go/env. Ideally it should be
+# configured by the `go env` tool, but if it's not available, exporting it will
+# do.
+# See: https://www.reddit.com/r/golang/comments/10psufn/avoid_having_a_go_directory/
+go env -w GOPATH=${HOME}/.local/share/go 2>/dev/null || \
+	export GOPATH=${HOME}/.local/share/go
 
 # kubectl
 alias k=kubectl
