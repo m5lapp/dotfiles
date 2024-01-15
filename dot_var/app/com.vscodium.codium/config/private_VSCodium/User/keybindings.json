@@ -1,0 +1,13 @@
+// Place your key bindings in this file to override the defaults
+[
+	// Switch between the terminal and the editor with Ctrl+`.`
+    {
+        "key":     "ctrl+`",
+        "command": "workbench.action.terminal.focus"
+    },
+    {
+        "key":     "ctrl+`",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when":    "terminalFocus"
+    }
+]

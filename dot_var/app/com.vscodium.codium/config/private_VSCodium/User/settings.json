@@ -1,0 +1,53 @@
+{
+    // Turn on auto-save.
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+
+    // Add vertical rulers at specific caharcter positions.
+    "editor.rulers": [80, 100, 120],
+
+    // Configure profiles for the integrated terminal. flatpak-spawn can be used
+    // to access resources from outside of the Flatpak container, even to enter
+    // other containers such as a Toolbox one.
+    // Icons can be found at:
+    //   https://microsoft.github.io/vscode-codicons/dist/codicon.html
+    "terminal.integrated.profiles.linux": {
+	    "bash": null,
+        "bash-host": {
+            "path": "/usr/bin/env",
+            "args": [
+                "--",
+                "flatpak-spawn",
+                "--host",
+                "bash"
+            ],
+            "icon": "terminal-bash",
+            "color": "terminal.ansiRed"
+        },
+        "bash-flatpak": {
+            "path": "bash",
+            "icon": "terminal-bash",
+            "color": "terminal.ansiGreen"
+        },
+        "toolbox-dev-box": {
+            "path": "/usr/bin/env",
+            "args": [
+                "--",
+                "flatpak-spawn",
+                "--host",
+                "toolbox",
+                "enter",
+                "dev-box"
+            ],
+            "icon": "terminal-bash",
+            "color": "terminal.ansiBlue"
+        },
+    },
+    "terminal.integrated.defaultProfile.linux": "toolbox-dev-box",
+
+    // When opening a new window, inherit the size and position of the
+    // previously open one.
+    "window.newWindowDimensions": "inherit",
+    "go.toolsManagement.autoUpdate": true,
+    "editor.cursorSurroundingLines": 999
+}
