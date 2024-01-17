@@ -5,9 +5,24 @@
     // "width": 1280, // Waybar width
     "spacing": 4, // Gaps between modules (4px)
     // Choose the order of the modules
-    "modules-left": ["sway/workspaces", "sway/mode", "sway/scratchpad", "custom/media"],
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode",
+        "sway/scratchpad",
+        "custom/media"
+    ],
     "modules-center": ["sway/window"],
-    "modules-right": ["mpd", "idle_inhibitor", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "keyboard-state", "sway/language", "battery", "battery#bat2", "clock", "tray"],
+    "modules-right": [
+        "mpd",
+        "idle_inhibitor",
+        "temperature", "cpu", "memory",
+        "pulseaudio", "backlight",
+        "network",
+        "keyboard-state",
+        "battery", "battery#bat2",
+        "tray",
+        "clock"
+    ],
     // Modules configuration
     // "sway/workspaces": {
     //     "disable-scroll": true,
@@ -89,7 +104,9 @@
         "format-alt": "{:%H:%M}"
     },
     "cpu": {
-        "format": "{usage}% ",
+		"interval": 30,
+		"format": "{avg_frequency} GHz {usage}% ",
+        // "format": "{usage}% ",
         "tooltip": false
     },
     "memory": {
@@ -128,7 +145,9 @@
     },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} ({signalStrength}%) {icon}",
+        // "format-wifi": "{essid} ({signalStrength}%) {icon}",
+		"format-wifi": "  {bandwidthDownBytes} ({signalStrength}%)",
+		"tooltip-format-wifi": "{ifname} {essid} via {gwaddr} ip: {ipaddr}",
         "format-ethernet": "{ipaddr}/{cidr} ",
         "tooltip-format": "{ifname} via {gwaddr} ",
         "format-linked": "{ifname} (No IP) ",
@@ -166,6 +185,10 @@
         "escape": true,
         "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
         // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
-    }
+    },
+	"custom/power": {
+		"format": "⏻",
+		"on-click": "shutdown"
+	}
 }
 
