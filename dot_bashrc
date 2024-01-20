@@ -48,6 +48,7 @@ then
 		alias flatpak="/usr/bin/env -- flatpak-spawn --host flatpak"
 		alias podman="/usr/bin/env -- flatpak-spawn --host podman"
 		alias rpm-ostree="/usr/bin/env -- flatpak-spawn --host rpm-ostree"
+		alias spawn="/usr/bin/env -- flatpak-spawn --host"
 	fi
 fi
 
@@ -69,7 +70,6 @@ go env -w GOPATH=${HOME}/.local/share/go 2>/dev/null || \
 alias k=kubectl
 complete -o default -F __start_kubectl k
 export KUBE_EDITOR=$(which vi)
-export KUBECONFIG=/home/${USER}/.config/kube/config
 
 # Linkerd
 export PATH="${PATH}:/home/${USER}/.local/linkerd2/bin"
