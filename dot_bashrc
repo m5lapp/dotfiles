@@ -26,6 +26,31 @@ fi
 
 unset rc
 
+# Distrobox and Toolbox container environment.
+if command -v distrobox &>/dev/null || command -v toolbox &>/dev/null
+then
+    function de() {
+        distrobox enter ${1:-dev-box}
+    }
+    function te() {
+        toolbox enter ${1:-dev-box}
+    }
+fi
+
+# Check if we're inside a container. If so, create aliases to be able to run
+# common host commands such as flatpak and podman from inside the container.
+if [ -e /run/.containerenv ] || [ -e /.dockerenv ]
+then
+	# Ensure the flatpak-spawn command is available.
+	if command -v flatpak-spawn &>/dev/null
+	then
+		alias docker="/usr/bin/env -- flatpak-spawn --host docker"
+		alias flatpak="/usr/bin/env -- flatpak-spawn --host flatpak"
+		alias podman="/usr/bin/env -- flatpak-spawn --host podman"
+		alias rpm-ostree="/usr/bin/env -- flatpak-spawn --host rpm-ostree"
+	fi
+fi
+
 # flyctl
 export FLYCTL_INSTALL="/home/${USER}/.local/fly"
 export PATH="${PATH}:${FLYCTL_INSTALL}/bin"
@@ -55,20 +80,6 @@ export PATH="${PATH}:/home/${USER}/.local/linkerd2/bin"
 
 # Terraform
 complete -C /usr/bin/terraform terraform
-
-# Check if we're inside a container. If so, create aliases to be able to run
-# common host commands such as flatpak and podman from inside the container.
-if [ -e /run/.containerenv ] || [ -e /.dockerenv ]
-then
-	# Ensure the flatpak-spawn command is available.
-	if command -v flatpak-spawn &>/dev/null
-	then
-		alias docker="/usr/bin/env -- flatpak-spawn --host docker"
-		alias flatpak="/usr/bin/env -- flatpak-spawn --host flatpak"
-		alias podman="/usr/bin/env -- flatpak-spawn --host podman"
-		alias rpm-ostree="/usr/bin/env -- flatpak-spawn --host rpm-ostree"
-	fi
-fi
 
 # Load the Starship command prompt if it exists.
 if command -v starship &>/dev/null
