@@ -176,11 +176,11 @@ input "type:keyboard" {
     # Define workspace names
     # Font icons can be searched for at:
     # https://fontawesome.com/search?o=r&m=free
-    set $workspace01 "1: Browser "
+    set $workspace01 "1: Browser "
     set $workspace02 "2: Terminal "
     set $workspace03 "3: Editor "
-    set $workspace04 "4: Notes "
-    set $workspace05 "5: File Manager "
+    set $workspace04 "4: Notes "
+    set $workspace05 "5: File Manager "
     set $workspace06 "6"
     set $workspace07 "7"
     set $workspace08 "8"
