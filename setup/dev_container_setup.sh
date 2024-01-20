@@ -45,8 +45,7 @@ create_dev_container_distrobox () {
         -- \
         sh -c '
             export BW_SESSION=$(bw login --raw || bw unlock --raw) && \
-            chezmoi init --apply --interactive --verbose \
-                https://github.com/${GITHUB_USERNAME}/dotfiles.git'
+            chezmoi init --apply --interactive --verbose ${GITHUB_USERNAME}'
 }
 
 create_dev_container_toolbox () {
@@ -66,8 +65,7 @@ create_dev_container_toolbox () {
         -- \
         sh -c '
             export BW_SESSION=$(bw login --raw || bw unlock --raw) && \
-            chezmoi init --apply --interactive --verbose \
-                https://github.com/${GITHUB_USERNAME}/dotfiles.git'
+            chezmoi init --apply --interactive --verbose ${GITHUB_USERNAME}'
 }
 
 is_running_in_container () {
@@ -129,6 +127,9 @@ install_bitwarden () {
     curl -L -o /tmp/bitwarden-cli.zip "${BITWARDEN_CLI_URL}"
     sudo unzip /tmp/bitwarden-cli.zip -d /usr/local/bin/
     rm /tmp/bitwarden-cli.zip
+
+    # Install bash completion.
+    # Bitwarden currently only offers completion for zsh.
 }
 
 install_chezmoi () {
@@ -136,7 +137,25 @@ install_chezmoi () {
     command_exists chezmoi && return
 
     sudo sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin/
+
+    # Install bash completion.
     sudo chezmoi completion bash --output /etc/bash_completion.d/chezmoi
+}
+
+install_cilium () {
+    # Check if the cilium binary is already installed and executable.
+    command_exists cilium && return
+
+    local CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
+    local CLI_ARCH=amd64
+    if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
+    curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+    sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
+    sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
+    rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+
+    # Install bash completion.
+    cilium completion bash | sudo tee /etc/bash_completion.d/cilium > /dev/null
 }
 
 install_fly () {
@@ -208,6 +227,9 @@ install_istioctl_dnf () {
     echo "Installing istioctl via DNF..."
     add_gcp_repo_dnf
     sudo dnf install -y google-cloud-cli-istioctl
+
+    # Install bash completion.
+    istioctl completion bash | sudo tee /etc/bash_completion.d/istioctl > /dev/null
 }
 
 install_kubectl_dnf () {
@@ -236,6 +258,8 @@ install_kubeseal () {
 
     sudo install -m 755 kubeseal /usr/local/bin/kubeseal
     rm kubeseal*
+
+    # There is no completion available for kubeseal.
 }
 
 install_linkerd () {
@@ -245,6 +269,9 @@ install_linkerd () {
     echo "Installing the Linkerd CLI from linkerd.io..."
     curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | \
         INSTALLROOT=/home/${USER}/.local/linkerd2 sh
+
+    # Install bash completion.
+    linkerd completion bash | sudo tee /etc/bash_completion.d/linkerd > /dev/null
 }
 
 install_neovim_dnf () {
@@ -293,6 +320,9 @@ install_starship () {
     echo "Installing the starship prompt to ${BIN_DIR}"
     curl -sS https://starship.rs/install.sh | \
         sh -s -- --yes --bin-dir "${BIN_DIR}"
+
+    # Install bash completion.
+    starship completions bash | sudo tee /etc/bash_completion.d/starship > /dev/null
 }
 
 install_terraform_dnf () {
@@ -305,3 +335,4 @@ install_terraform_dnf () {
         --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
     sudo dnf install -y terraform
 }
+
