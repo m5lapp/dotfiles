@@ -49,5 +49,9 @@
     // previously open one.
     "window.newWindowDimensions": "inherit",
     "go.toolsManagement.autoUpdate": true,
-    "editor.cursorSurroundingLines": 999
+    "editor.cursorSurroundingLines": 999,
+
+    // Theme configuration.
+    "workbench.colorTheme": "Catppuccin Macchiato",
+    "workbench.iconTheme": "catppuccin-macchiato"
 }
