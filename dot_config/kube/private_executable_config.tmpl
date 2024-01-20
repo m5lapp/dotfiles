@@ -27,7 +27,7 @@ contexts:
     }}
     user: prod_user
   name: prod
-current-context: {{ output "bash" "-c" "kubectl config current-context || prod" | trim }}
+current-context: {{ output "bash" "-c" "kubectl config current-context || echo prod" | trim }}
 preferences: {}
 users:
 - name: prod_user
