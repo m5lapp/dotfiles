@@ -14,11 +14,12 @@ RUN source /opt/setup/dev_container_setup.sh && \
     install_system_packages_dnf && \
     install_bitwarden && \
     install_chezmoi && \
+    install_cilium && \
     install_gcloud_dnf && \
     install_golang && \
+    install_istioctl_dnf && \
     install_kubectl_dnf && \
     install_kubeseal && \
-    install_istioctl_dnf && \
     install_neovim_dnf && \
     install_terraform_dnf && \
     install_starship

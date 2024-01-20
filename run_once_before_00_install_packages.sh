@@ -15,3 +15,4 @@ install_fly
 install_golang_tools
 install_linkerd
 install_neovim_nvchad_config
+

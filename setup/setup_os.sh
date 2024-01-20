@@ -40,12 +40,13 @@ fi
 # Load the set up functions for the determined OS and run them.
 source ${BOOTSTRAP_FUNCTIONS_FILE}
 
-# update_os
-# add_system_packages
-# remove_system_packages
-# add_flatpaks
+update_os
+add_system_packages
+remove_system_packages
+add_flatpaks
 create_dev_container \
     ${DEV_CONTAINER_NAME} \
     ${DEV_GITHUB_USERNAME} \
     ${DEV_CONTAINER_IMAGE} \
     ${DEV_CONTAINER_TAG}
+

@@ -45,7 +45,7 @@ add_flatpaks_sericea() {
 add_system_packages () {
     rpm-ostree install \
         distrobox \
-        jetbrains-mono-fonts \
+        jetbrains-mono-fonts-all \
         make \
         neovim \
         tmux

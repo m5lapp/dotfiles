@@ -3,18 +3,18 @@
 CONTAINER_NAME="dev-box"
 CONTAINER_REGISTRY="docker.io"
 CONTAINER_REGISTRY_USER="rareb1t"
-CONTAINER_TAG="39.0"
+CONTAINER_TAG="39.1"
 CONTAINER_IMAGE="${CONTAINER_REGISTRY}/${CONTAINER_REGISTRY_USER}/dev-container"
 GITHUB_USERNAME="m5lapp"
 
 build_dev_container_image () {
-    CONTAINER_CMD=${1:-podman}
+    local CONTAINER_CMD=${1:-podman}
 
-    ${CONTAINER_CMD} build -t ${CONTAINER_IMAGE}:${CONTAINER_TAG}
+    ${CONTAINER_CMD} build -t ${CONTAINER_IMAGE}:${CONTAINER_TAG} .
 }
 
 push_dev_container_image () {
-    CONTAINER_CMD=${1:-podman}
+    local CONTAINER_CMD=${1:-podman}
 
     if [ -z "${CONTAINER_REGISTRY_ACCESS_TOKEN}" ]
     then
