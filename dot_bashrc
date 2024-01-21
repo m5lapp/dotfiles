@@ -52,6 +52,9 @@ then
 	fi
 fi
 
+# Bitwarden
+alias bw_session="export BW_SESSION=\$(bw unlock --raw)"
+
 # flyctl
 export FLYCTL_INSTALL="/home/${USER}/.local/fly"
 export PATH="${PATH}:${FLYCTL_INSTALL}/bin"
