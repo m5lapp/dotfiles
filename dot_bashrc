@@ -29,26 +29,39 @@ unset rc
 # Distrobox and Toolbox container environment.
 if command -v distrobox &>/dev/null || command -v toolbox &>/dev/null
 then
-    function de() {
+    de() {
         distrobox enter ${1:-dev-box}
     }
-    function te() {
+    te() {
         toolbox enter ${1:-dev-box}
     }
 fi
 
-# Check if we're inside a container. If so, create aliases to be able to run
+# Check if we're inside a container. If so, create functions to be able to run
 # common host commands such as flatpak and podman from inside the container.
+# Functions are used rather than aliases so that they can be called from any
+# scripts or makefiles that are run in the container.
 if [ -e /run/.containerenv ] || [ -e /.dockerenv ]
 then
 	# Ensure the flatpak-spawn command is available.
 	if command -v flatpak-spawn &>/dev/null
 	then
-		alias docker="/usr/bin/env -- flatpak-spawn --host docker"
-		alias flatpak="/usr/bin/env -- flatpak-spawn --host flatpak"
-		alias podman="/usr/bin/env -- flatpak-spawn --host podman"
-		alias rpm-ostree="/usr/bin/env -- flatpak-spawn --host rpm-ostree"
-		alias spawn="/usr/bin/env -- flatpak-spawn --host"
+        # `spawn` is a generic function for running a command on the host OS.
+        spawn() {
+            /usr/bin/env -- flatpak-spawn --host ${@}
+        }
+        docker() {
+            spawn docker ${@}
+        }
+        flatpak() {
+            spawn flatpak ${@}
+        }
+        podman() {
+            spawn podman ${@}
+        }
+        rpm-ostree() {
+            spawn rpm-ostree ${@}
+        }
 	fi
 fi
 
@@ -70,7 +83,8 @@ go env -w GOPATH=${HOME}/.local/share/go 2>/dev/null || \
 	export GOPATH=${HOME}/.local/share/go
 
 # kubectl
-alias k=kubectl
+# The space after the command allows this to be used in a watch command.
+alias k='kubectl '
 complete -o default -F __start_kubectl k
 export KUBE_EDITOR=$(which vi)
 
@@ -82,10 +96,14 @@ export PATH="${PATH}:/home/${USER}/.local/linkerd2/bin"
     source "/usr/lib/oracle-cli/lib/python3.11/site-packages/oci_cli/bin/oci_autocomplete.sh"
 
 # Terraform
-complete -C /usr/bin/terraform terraform
+if command -v terraform &>/dev/null
+then
+    complete -C $(which terraform) terraform
+fi
 
 # Load the Starship command prompt if it exists.
 if command -v starship &>/dev/null
 then
 	eval "$(starship init bash)"
 fi
+

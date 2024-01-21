@@ -7,13 +7,13 @@ CONTAINER_TAG="39.1"
 CONTAINER_IMAGE="${CONTAINER_REGISTRY}/${CONTAINER_REGISTRY_USER}/dev-container"
 GITHUB_USERNAME="m5lapp"
 
-build_dev_container_image () {
+build_dev_container_image() {
     local CONTAINER_CMD=${1:-podman}
 
     ${CONTAINER_CMD} build -t ${CONTAINER_IMAGE}:${CONTAINER_TAG} .
 }
 
-push_dev_container_image () {
+push_dev_container_image() {
     local CONTAINER_CMD=${1:-podman}
 
     if [ -z "${CONTAINER_REGISTRY_ACCESS_TOKEN}" ]
@@ -29,7 +29,7 @@ push_dev_container_image () {
     ${CONTAINER_CMD} push ${CONTAINER_IMAGE}:${CONTAINER_TAG}
 }
 
-create_dev_container_distrobox () {
+create_dev_container_distrobox() {
     local CONTAINER_NAME=${1:-CONTAINER_NAME}
     local GITHUB_USERNAME=${2:-GITHUB_USERNAME}
     local CONTAINER_IMAGE=${3:-CONTAINER_IMAGE}
@@ -48,7 +48,7 @@ create_dev_container_distrobox () {
             chezmoi init --apply --interactive --verbose ${GITHUB_USERNAME}'
 }
 
-create_dev_container_toolbox () {
+create_dev_container_toolbox() {
     local CONTAINER_NAME=${1:-CONTAINER_NAME}
     local GITHUB_USERNAME=${2:-GITHUB_USERNAME}
     local CONTAINER_IMAGE=${3:-CONTAINER_IMAGE}
@@ -68,7 +68,7 @@ create_dev_container_toolbox () {
             chezmoi init --apply --interactive --verbose ${GITHUB_USERNAME}'
 }
 
-is_running_in_container () {
+is_running_in_container() {
     if [ -e /run/.containerenv ] || [ -e /.dockerenv ]
     then
         return 0
@@ -77,7 +77,7 @@ is_running_in_container () {
     fi
 }
 
-command_exists () {
+command_exists() {
     local COMMAND="${1:-''}"
 
     # Check if the given command is already installed and executable.
@@ -89,7 +89,7 @@ command_exists () {
     fi
 }
 
-add_gcp_repo_dnf () {
+add_gcp_repo_dnf() {
     # Check if the google-cloud-cli repo is already installed and active.
     dnf repolist google-cloud-cli | grep --silent enabled && return
 
@@ -104,19 +104,19 @@ gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOM
 }
 
-update_dnf () {
+update_dnf() {
     echo "Updating packages in DNF..."
     sudo dnf update -y
 }
 
-install_system_packages_dnf () {
+install_system_packages_dnf() {
     echo "Installing general dependencies via DNF..."
     sudo dnf install -y \
         bash-completion \
         flatpak-spawn
 }
 
-install_bitwarden () {
+install_bitwarden() {
     # Check if the Bitwarden CLI is already installed and executable.
     command_exists bw && return
 
@@ -132,7 +132,7 @@ install_bitwarden () {
     # Bitwarden currently only offers completion for zsh.
 }
 
-install_chezmoi () {
+install_chezmoi() {
     # Check if the chezmoi binary is already installed and executable.
     command_exists chezmoi && return
 
@@ -142,7 +142,7 @@ install_chezmoi () {
     sudo chezmoi completion bash --output /etc/bash_completion.d/chezmoi
 }
 
-install_cilium () {
+install_cilium() {
     # Check if the cilium binary is already installed and executable.
     command_exists cilium && return
 
@@ -158,7 +158,7 @@ install_cilium () {
     cilium completion bash | sudo tee /etc/bash_completion.d/cilium > /dev/null
 }
 
-install_fly () {
+install_fly() {
     # Check if the fly binary is already installed and executable.
     command_exists fly && return
 
@@ -171,7 +171,7 @@ install_fly () {
         sudo tee /etc/bash_completion.d/flyctl > /dev/null
 }
 
-install_gcloud_dnf () {
+install_gcloud_dnf() {
     # Check if the gcloud binary is already installed and executable.
     command_exists gcloud && return
 
@@ -193,7 +193,7 @@ install_gcloud_dnf () {
     # gcloud init
 }
 
-install_golang () {
+install_golang() {
     # Check if the golang binary is already installed and executable.
     command_exists go && return
 
@@ -208,7 +208,7 @@ install_golang () {
     rm /tmp/go.tar.gz
 }
 
-install_golang_tools () {
+install_golang_tools() {
     if ! command_exists go
     then
         echo "Cannot install Go tools without the go binary being installed first."
@@ -218,9 +218,23 @@ install_golang_tools () {
     echo "Install Golang tools/dependants..."
     go install golang.org/x/tools/gopls@latest
     go install github.com/golang/protobuf/protoc-gen-go@latest
+    go install github.com/golang-migrate/migrate@latest
 }
 
-install_istioctl_dnf () {
+install_istioctl() {
+    # Check if the istioctl binary is already installed and executable.
+    command_exists istioctl && return
+
+    echo "Installing istioctl..."
+    curl -L https://istio.io/downloadIstio | sh -
+    sudo install -o root -g root -m 0755 istio-*/bin/istioctl /usr/local/bin/istioctl
+    rm -rf istio-*/
+
+    # Install bash completion.
+    istioctl completion bash | sudo tee /etc/bash_completion.d/istioctl > /dev/null
+}
+
+install_istioctl_dnf() {
     # Check if the istioctl binary is already installed and executable.
     command_exists istioctl && return
 
@@ -232,7 +246,36 @@ install_istioctl_dnf () {
     istioctl completion bash | sudo tee /etc/bash_completion.d/istioctl > /dev/null
 }
 
-install_kubectl_dnf () {
+install_kubectl() {
+    # Check if the kubectl binary is already installed and executable.
+    command_exists kubectl && return
+
+    echo "Installing Kubectl and Helm..."
+    local KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+    echo "Downloading and installing Kubectl version ${KUBECTL_VERSION}."
+    curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+
+    # Verify the integrity of the downloaded binary.
+    curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl.sha256"
+    echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check || return ${?}
+
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm kubectl kubectl.sha256
+
+    local HELM_VERSION=$(curl --silent https://get.helm.sh/helm-latest-version)
+    echo "Downloading and installing Helm version ${HELM_VERSION}."
+    curl -LO "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz"
+
+    tar -zxvf helm-${HELM_VERSION}-linux-amd64.tar.gz
+    sudo install -o root -g root -m 0755 linux-amd64/helm /usr/local/bin/helm
+    rm -rf helm-${HELM_VERSION}-linux-amd64.tar.gz linux-amd64/
+
+    # Use tee with sudo as redirects to a file as sudo do not work.
+    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
+}
+
+install_kubectl_dnf() {
     # Check if the kubectl binary is already installed and executable.
     command_exists kubectl && return
 
@@ -245,7 +288,7 @@ install_kubectl_dnf () {
     helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
 }
 
-install_kubeseal () {
+install_kubeseal() {
     # Check if the kubeseal binary is already installed and executable.
     command_exists kubeseal && return
 
@@ -262,7 +305,7 @@ install_kubeseal () {
     # There is no completion available for kubeseal.
 }
 
-install_linkerd () {
+install_linkerd() {
     # Check if the linkerd binary is already installed and executable.
     command_exists linkerd && return
 
@@ -274,7 +317,7 @@ install_linkerd () {
     linkerd completion bash | sudo tee /etc/bash_completion.d/linkerd > /dev/null
 }
 
-install_neovim_dnf () {
+install_neovim_dnf() {
     # Check if the nvim binary is already installed and executable.
     command_exists nvim && return
 
@@ -282,7 +325,7 @@ install_neovim_dnf () {
     sudo dnf install -y gcc gcc-c++ neovim
 }
 
-install_neovim_nvchad_config () {
+install_neovim_nvchad_config() {
     # Backup up the existing nvim configuration directory if it exists.
     if [ -d ~/.config/nvim/ ]
     then 
@@ -297,7 +340,7 @@ install_neovim_nvchad_config () {
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 }
 
-install_oci () {
+install_oci() {
     # Check if the oci binary is already installed and executable.
     command_exists oci && return
 
@@ -312,7 +355,7 @@ install_oci () {
         --script-dir /usr/bin/oci-cli-scripts/
 }
 
-install_starship () {
+install_starship() {
     # Check if the starship binary is already installed and executable.
     command_exists starship && return
 
@@ -325,7 +368,27 @@ install_starship () {
     starship completions bash | sudo tee /etc/bash_completion.d/starship > /dev/null
 }
 
-install_terraform_dnf () {
+install_terraform() {
+    # Check if the terraform binary is already installed and executable.
+    command_exists terraform && return
+
+    # There is a Github gist available to look up the latest version number for
+    # Terraform, but it depends on `jq` which is not guarenteed to be installed.
+    # See: https://gist.github.com/danisla/0a394c75bddce204688b21e28fd2fea5
+    local TF_VERSION="1.7.0"
+    echo "Installing Terraform version ${TF_VERSION}..."
+    local TF_FILE_NAME="terraform_${TF_VERSION}_linux_amd64.zip"
+    curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/${TF_FILE_NAME}
+
+    unzip ${TF_FILE_NAME}
+    sudo install -o root -g root -m 0755 terraform /usr/local/bin/terraform
+    rm terraform ${TF_FILE_NAME}
+
+    # Set up bash completion. Add this to the .bashrc file to make permanent.
+    complete -C $(which terraform) terraform
+}
+
+install_terraform_dnf() {
     # Check if the terraform binary is already installed and executable.
     command_exists terraform && return
 

@@ -17,10 +17,10 @@ RUN source /opt/setup/dev_container_setup.sh && \
     install_cilium && \
     install_gcloud_dnf && \
     install_golang && \
-    install_istioctl_dnf && \
-    install_kubectl_dnf && \
+    install_istioctl && \
+    install_kubectl && \
     install_kubeseal && \
     install_neovim_dnf && \
-    install_terraform_dnf && \
+    install_terraform && \
     install_starship
     #install_oci && \
