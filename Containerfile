@@ -21,6 +21,7 @@ RUN source /opt/setup/dev_container_setup.sh && \
     install_kubectl && \
     install_kubeseal && \
     install_neovim_dnf && \
+    install_psql_client_dnf && \
     install_terraform && \
     install_starship
     #install_oci && \

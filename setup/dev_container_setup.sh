@@ -3,7 +3,7 @@
 CONTAINER_NAME="dev-box"
 CONTAINER_REGISTRY="docker.io"
 CONTAINER_REGISTRY_USER="rareb1t"
-CONTAINER_TAG="39.1"
+CONTAINER_TAG="39.2"
 CONTAINER_IMAGE="${CONTAINER_REGISTRY}/${CONTAINER_REGISTRY_USER}/dev-container"
 GITHUB_USERNAME="m5lapp"
 
@@ -18,8 +18,8 @@ push_dev_container_image() {
 
     if [ -z "${CONTAINER_REGISTRY_ACCESS_TOKEN}" ]
     then
-        echo "Please export the CONTAINER_REGISTRY_ACCESS_TOKEN variable to push the container image."
-        return 1
+        echo "Please export the CONTAINER_REGISTRY_ACCESS_TOKEN variable to push the container image:"
+        read -p "Token: " CONTAINER_REGISTRY_ACCESS_TOKEN
     fi
 
 	${CONTAINER_CMD} login ${CONTAINER_REGISTRY} \
@@ -353,6 +353,14 @@ install_oci() {
         --install-dir /usr/lib/oracle-cli/ \
         --exec-dir /usr/bin/ \
         --script-dir /usr/bin/oci-cli-scripts/
+}
+
+install_psql_client_dnf() {
+    # Check if the psql binary is already installed and executable.
+    command_exists psql && return
+
+    echo "Installing the PostgreSQL client via DNF..."
+    sudo dnf install -y postgresql
 }
 
 install_starship() {
