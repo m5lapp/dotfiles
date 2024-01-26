@@ -113,6 +113,7 @@ install_system_packages_dnf() {
     echo "Installing general dependencies via DNF..."
     sudo dnf install -y \
         bash-completion \
+        bind-utils \
         flatpak-spawn
 }
 
@@ -338,6 +339,15 @@ install_neovim_nvchad_config() {
     echo "Installing the NvChad NeoVim distribution..."
     rm -rf ~/.local/share/nvim/
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+}
+
+install_python_dnf() {
+    # Check if the pip3 command is already installed and executable.
+    command_exists pip3 && return
+
+    sudo dnf install -y \
+        python3 \
+        python3-pip
 }
 
 install_oci() {
