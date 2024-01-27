@@ -160,12 +160,17 @@ install_cilium() {
 }
 
 install_fly() {
-    # Check if the fly binary is already installed and executable.
-    command_exists fly && return
-
     local FLYCTL_INSTALL="/home/${USER}/.local/fly"
-    echo "Installing the fly.io CLI to ${FLYCTL_INSTALL}/..."
-    curl -L https://fly.io/install.sh | sh
+
+    # Check if the fly binary is already installed and executable.
+    if command_exists fly
+    then
+        echo "Upgrading the fly.io CLI in ${FLYCTL_INSTALL}..."
+        fly version upgrade
+    else
+        echo "Installing the fly.io CLI to ${FLYCTL_INSTALL}..."
+        curl -L https://fly.io/install.sh | sh
+    fi
 
     # Install bash completion.
     ${FLYCTL_INSTALL}/bin/fly completion bash | \
@@ -210,16 +215,19 @@ install_golang() {
 }
 
 install_golang_tools() {
-    if ! command_exists go
-    then
+    if ! command_exists go; then
         echo "Cannot install Go tools without the go binary being installed first."
         return 1
     fi
 
     echo "Install Golang tools/dependants..."
+    local GOPATH="${HOME}/.local/share/go"
     go install golang.org/x/tools/gopls@latest
     go install github.com/golang/protobuf/protoc-gen-go@latest
-    go install github.com/golang-migrate/migrate@latest
+
+    # Install the golang-migrate CLI.
+    curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.0/migrate.linux-amd64.tar.gz | tar -xvz migrate
+    mv migrate ${GOPATH}/bin/migrate
 }
 
 install_istioctl() {
@@ -308,11 +316,12 @@ install_kubeseal() {
 
 install_linkerd() {
     # Check if the linkerd binary is already installed and executable.
-    command_exists linkerd && return
-
-    echo "Installing the Linkerd CLI from linkerd.io..."
-    curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | \
-        INSTALLROOT=/home/${USER}/.local/linkerd2 sh
+    if ! command_exists linkerd
+    then
+        echo "Installing the Linkerd CLI from linkerd.io..."
+        curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | \
+            INSTALLROOT=/home/${USER}/.local/linkerd2 sh
+    fi
 
     # Install bash completion.
     linkerd completion bash | sudo tee /etc/bash_completion.d/linkerd > /dev/null
@@ -327,9 +336,14 @@ install_neovim_dnf() {
 }
 
 install_neovim_nvchad_config() {
-    # Backup up the existing nvim configuration directory if it exists.
-    if [ -d ~/.config/nvim/ ]
-    then 
+    # Check if an existing nvim configuration directory exists.
+    if [ -d ~/.config/nvim/ ]; then 
+        read -p "~/.config/nvim/ exists. Back up and replace (y/n)? " NVIM_OVERWRITE
+        if [ "${NVIM_OVERWRITE}" != "y" ]; then
+            # The user opted to not back up and replace the nvim config.
+            return 0
+        fi
+
         local BACKUP_DIR=~/.config/nvim.backup.$(date "+%Y%m%d%H%M%S")/
         echo "Backing up NeoVim config from ~/.config/nvim/ to ${BACKUP_DIR}..."
         mv ~/.config/nvim/ ${BACKUP_DIR}
