@@ -3,7 +3,7 @@
 CONTAINER_NAME="dev-box"
 CONTAINER_REGISTRY="docker.io"
 CONTAINER_REGISTRY_USER="rareb1t"
-CONTAINER_TAG="39.2"
+CONTAINER_TAG="39.3"
 CONTAINER_IMAGE="${CONTAINER_REGISTRY}/${CONTAINER_REGISTRY_USER}/dev-container"
 GITHUB_USERNAME="m5lapp"
 
@@ -157,6 +157,16 @@ install_cilium() {
 
     # Install bash completion.
     cilium completion bash | sudo tee /etc/bash_completion.d/cilium > /dev/null
+}
+
+install_flux() {
+    # Check if the flux binary is already installed and executable.
+    command_exists flux && return
+
+    curl -s https://fluxcd.io/install.sh | BIN_DIR="/usr/local/bin" sudo bash
+
+    # Install bash completion.
+    flux completion bash | sudo tee /etc/bash_completion.d/flux > /dev/null
 }
 
 install_fly() {

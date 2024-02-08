@@ -15,6 +15,7 @@ RUN source /opt/setup/dev_container_setup.sh && \
     install_bitwarden && \
     install_chezmoi && \
     install_cilium && \
+    install_flux && \
     install_gcloud_dnf && \
     install_golang && \
     install_istioctl && \
