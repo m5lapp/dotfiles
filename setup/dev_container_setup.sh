@@ -117,6 +117,16 @@ install_system_packages_dnf() {
         flatpak-spawn
 }
 
+install_act() {
+    # Check if Act is already installed and executable.
+    command_exists act && return
+
+    # Install Act.
+    echo "Installing Act from Github..."
+    local ACT_CLI_URL="https://raw.githubusercontent.com/nektos/act/master/install.sh"
+    curl --proto '=https' --tlsv1.2 -sSf ${ACT_CLI_URL} | sudo bash -s -- -b ~/.local/bin
+}
+
 install_bitwarden() {
     # Check if the Bitwarden CLI is already installed and executable.
     command_exists bw && return
