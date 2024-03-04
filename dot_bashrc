@@ -26,6 +26,9 @@ fi
 
 unset rc
 
+# Aliasing watch allows it to be used with other aliases.
+alias watch='watch '
+
 # Distrobox and Toolbox container environment.
 if command -v distrobox &>/dev/null || command -v toolbox &>/dev/null
 then
