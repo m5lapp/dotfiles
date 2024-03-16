@@ -76,6 +76,9 @@ export FLYCTL_INSTALL="/home/${USER}/.local/fly"
 export PATH="${PATH}:${FLYCTL_INSTALL}/bin"
 complete -o default -F __start_flyctl fly
 
+# Git
+alias gfp="git fetch && git pull"
+
 # Golang
 export PATH=${PATH}:/usr/local/go/bin:${HOME}/.local/share/go/bin
 # GOPATH gets configured in the file $HOME/.config/go/env. Ideally it should be
