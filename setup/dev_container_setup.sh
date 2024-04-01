@@ -275,6 +275,24 @@ install_istioctl_dnf() {
     istioctl completion bash | sudo tee /etc/bash_completion.d/istioctl > /dev/null
 }
 
+install_k9s() {
+    # Check if the k9s binary is already installed and executable.
+    command_exists k9s && return
+
+    local K9S_TARBALL="k9s_Linux_amd64.tar.gz"
+    local K9S_VERSION="0.32.4"
+
+    echo "Downloading and installing K9s version ${K9S_VERSION}."
+    curl -LO "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/${K9S_TARBALL}"
+
+    tar -zxvf ${K9S_TARBALL} k9s
+    sudo install -o root -g root -m 0755 k9s /usr/local/bin/k9s
+    rm ${K9S_TARBALL} k9s
+
+    # Install bash completion.
+    k9s completion bash | sudo tee /etc/bash_completion.d/k9s > /dev/null
+}
+
 install_kubectl() {
     # Check if the kubectl binary is already installed and executable.
     command_exists kubectl && return

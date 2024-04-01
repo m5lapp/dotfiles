@@ -19,6 +19,7 @@ RUN source /opt/setup/dev_container_setup.sh && \
     install_gcloud_dnf && \
     install_golang && \
     install_istioctl && \
+    install_k9s && \
     install_kubectl && \
     install_kubeseal && \
     install_neovim_dnf && \
