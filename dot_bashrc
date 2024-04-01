@@ -93,6 +93,19 @@ go env -w GOPATH=${HOME}/.local/share/go 2>/dev/null || \
 alias k='kubectl '
 complete -o default -F __start_kubectl k
 export KUBE_EDITOR=$(which vi)
+# Decode and print all of the secret values in a given Kubernetes Secret.
+secret() {
+    local SECRET=${1}
+
+    kubectl get secrets \
+    ${SECRET} \
+    -o go-template='
+        {{- range $k, $v := .data }}
+            {{- printf "%s: " $k }}
+            {{- if $v }}{{ base64decode $v }}{{ else }}{{ $v }}{{ end }}
+            {{- printf "\n" }}
+        {{- end }}'
+}
 
 # Linkerd
 export PATH="${PATH}:/home/${USER}/.local/linkerd2/bin"
