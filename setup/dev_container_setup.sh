@@ -3,7 +3,7 @@
 CONTAINER_NAME="dev-box"
 CONTAINER_REGISTRY="docker.io"
 CONTAINER_REGISTRY_USER="rareb1t"
-CONTAINER_TAG="39.3"
+CONTAINER_TAG="40.0"
 CONTAINER_IMAGE="${CONTAINER_REGISTRY}/${CONTAINER_REGISTRY_USER}/dev-container"
 GITHUB_USERNAME="m5lapp"
 
@@ -339,7 +339,7 @@ install_kubeseal() {
     # Check if the kubeseal binary is already installed and executable.
     command_exists kubeseal && return
 
-    local KUBESEAL_VERSION="0.24.5"
+    local KUBESEAL_VERSION="0.26.3"
     local DOWNLOAD_URL="https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION:?}/kubeseal-${KUBESEAL_VERSION:?}-linux-amd64.tar.gz"
 
     echo "Installing the kubeseal CLI version ${KUBESEAL_VERSION}..."
@@ -445,7 +445,7 @@ install_terraform() {
     # There is a Github gist available to look up the latest version number for
     # Terraform, but it depends on `jq` which is not guarenteed to be installed.
     # See: https://gist.github.com/danisla/0a394c75bddce204688b21e28fd2fea5
-    local TF_VERSION="1.7.0"
+    local TF_VERSION="1.8.4"
     echo "Installing Terraform version ${TF_VERSION}..."
     local TF_FILE_NAME="terraform_${TF_VERSION}_linux_amd64.zip"
     curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/${TF_FILE_NAME}
@@ -469,3 +469,15 @@ install_terraform_dnf() {
     sudo dnf install -y terraform
 }
 
+install_veracrypt_rpm() {
+    # Check if the veracrypt binary is already installed and executable.
+    command_exists veracrypt && return
+
+    # https://www.veracrypt.fr/en/Downloads.html
+    local DOWNLOAD_URL="https://launchpad.net/veracrypt/trunk/1.26.7/+download/veracrypt-console-1.26.7-CentOS-8-x86_64.rpm"
+    curl -L -o /tmp/veracrypt-cli.rpm "${DOWNLOAD_URL}"
+
+    sudo dnf -y install fuse-devel
+    sudo dnf -y install /tmp/veracrypt-cli.rpm
+    rm /tmp/veracrypt-cli.rpm
+}

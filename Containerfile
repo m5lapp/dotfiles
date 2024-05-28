@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-toolbox:39
+FROM registry.fedoraproject.org/fedora-toolbox:40
 
 LABEL com.github.containers.toolbox="true" \
       usage="This image is meant to be used with the distrobox or toolbox commands" \
@@ -25,5 +25,6 @@ RUN source /opt/setup/dev_container_setup.sh && \
     install_neovim_dnf && \
     install_psql_client_dnf && \
     install_terraform && \
-    install_starship
+    install_starship && \
+    install_veracrypt_rpm
     #install_oci && \
