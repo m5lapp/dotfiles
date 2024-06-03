@@ -11,7 +11,9 @@
         "sway/scratchpad",
         "custom/media"
     ],
-    "modules-center": ["sway/window"],
+    // Adds the focussed window's title.
+    // "modules-center": ["sway/window"],
+    "modules-center": [],
     "modules-right": [
         "mpd",
         "idle_inhibitor",
