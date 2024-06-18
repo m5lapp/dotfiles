@@ -256,6 +256,10 @@ input "type:keyboard" {
 
     # Move focus to the parent container
     bindsym $mod+a focus parent
+
+    # Remove each object's title bar
+    default_border pixel 2
+    default_floating_border pixel 2
 #
 # Scratchpad:
 #
