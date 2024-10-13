@@ -17,6 +17,9 @@ exec_always if [ ! -e ~/.themes/Catppuccin-Frappe-Standard-Lavender-Dark ]; then
 # GTK 4
 exec_always gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 
+# Font
+font pango:JetBrains Mono Nerd Font Medium 11
+
 # The following include directive does not seem to work, therefore I've copied
 # the file's contents below.
 # include catpuccin-mocha
