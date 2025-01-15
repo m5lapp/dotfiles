@@ -8,6 +8,7 @@ local plugins = {
         "latex", "markdown",                     -- Documents
         "git_config", "gitcommit", "gitignore",  -- Git
         "go", "gomod", "gosum",                  -- Go
+        "lua",                                   -- Lua
         "python",                                -- Python
         "bash", "cmake",                         -- Systems
         "html", "http", "javascript",            -- Web development
@@ -49,6 +50,14 @@ local plugins = {
     ft = "go",
     opts = function()
       return require "custom.configs.null-ls"
+    end,
+  },
+
+  {
+    "sindrets/diffview.nvim",
+    cmd = {"DiffviewOpen"},
+    config = function()
+      require("diffview").setup()
     end,
   },
 
