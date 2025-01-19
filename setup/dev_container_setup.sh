@@ -438,6 +438,29 @@ install_starship() {
     starship completions bash | sudo tee /etc/bash_completion.d/starship > /dev/null
 }
 
+install_taskfile() {
+    # Check if the go-task binary is already installed and executable.
+    command_exists task && return
+
+    local DOWNLOAD_URL="https://github.com/go-task/task/releases/download/v3.41.0/task_linux_amd64.tar.gz"
+    local INSTALL_DIR="${HOME}/.local/bin/"
+
+    echo "Installing Taskfile (task) to ${INSTALL_DIR}..."
+    curl -L ${DOWNLOAD_URL} | tar -C ${INSTALL_DIR} -xvz task
+
+    task --completion bash | sudo tee /etc/bash_completion.d/task > /dev/null
+}
+
+install_taskfile_dnf() {
+    # Check if the go-task binary is already installed and executable.
+    command_exists go-task && return
+
+    echo "Installing Taskfile (go-task) via DNF..."
+    sudo dnf install -y go-task
+
+    go-task --completion bash | sudo tee /etc/bash_completion.d/go-task > /dev/null
+}
+
 install_terraform() {
     # Check if the terraform binary is already installed and executable.
     command_exists terraform && return
