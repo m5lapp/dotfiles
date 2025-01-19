@@ -22,6 +22,7 @@ RUN source /opt/setup/dev_container_setup.sh && \
     install_k9s && \
     install_kubectl && \
     install_kubeseal && \
+    install_latex_dnf && \
     install_neovim_dnf && \
     install_psql_client_dnf && \
     install_taskfile && \

@@ -352,6 +352,14 @@ install_kubeseal() {
     # There is no completion available for kubeseal.
 }
 
+install_latex_dnf() {
+    # Check if the latex command is already installed and executable.
+    command_exists latex && return
+
+    echo "Installing LaTeX..."
+    sudo dnf install texlive-scheme-basic "tex(fullpage.sty)"
+}
+
 install_linkerd() {
     # Check if the linkerd binary is already installed and executable.
     if ! command_exists linkerd
