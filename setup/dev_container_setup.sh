@@ -80,6 +80,13 @@ is_running_in_container() {
 command_exists() {
     local COMMAND="${1:-''}"
 
+    # The FORCE_INSTALL environment variable can be used to force commands to be
+    # reinstalled/updated if set to true.
+    if test "${FORCE_INSTALL:-}" == "true"
+    then
+        return 2
+    fi
+
     # Check if the given command is already installed and executable.
     if command -v ${COMMAND} &>/dev/null
     then
@@ -339,7 +346,7 @@ install_kubeseal() {
     # Check if the kubeseal binary is already installed and executable.
     command_exists kubeseal && return
 
-    local KUBESEAL_VERSION="0.26.3"
+    local KUBESEAL_VERSION="0.28.0"
     local DOWNLOAD_URL="https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION:?}/kubeseal-${KUBESEAL_VERSION:?}-linux-amd64.tar.gz"
 
     echo "Installing the kubeseal CLI version ${KUBESEAL_VERSION}..."
@@ -425,6 +432,14 @@ install_oci() {
         --script-dir /usr/bin/oci-cli-scripts/
 }
 
+install_oci_dnf() {
+    # Check if the oci binary is already installed and executable.
+    command_exists oci && return
+
+    echo "Installing the OCI CLI..."
+    sudo dnf install -y oci-cli
+}
+
 install_psql_client_dnf() {
     # Check if the psql binary is already installed and executable.
     command_exists psql && return
@@ -476,7 +491,7 @@ install_terraform() {
     # There is a Github gist available to look up the latest version number for
     # Terraform, but it depends on `jq` which is not guarenteed to be installed.
     # See: https://gist.github.com/danisla/0a394c75bddce204688b21e28fd2fea5
-    local TF_VERSION="1.8.4"
+    local TF_VERSION="1.10.5"
     echo "Installing Terraform version ${TF_VERSION}..."
     local TF_FILE_NAME="terraform_${TF_VERSION}_linux_amd64.zip"
     curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/${TF_FILE_NAME}

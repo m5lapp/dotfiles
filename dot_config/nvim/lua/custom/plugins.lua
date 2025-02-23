@@ -9,6 +9,7 @@ local plugins = {
         "git_config", "gitcommit", "gitignore",  -- Git
         "go", "gomod", "gosum",                  -- Go
         "lua",                                   -- Lua
+        "terraform",                             -- Platform
         "python",                                -- Python
         "bash", "cmake",                         -- Systems
         "html", "http", "javascript",            -- Web development
