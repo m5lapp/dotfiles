@@ -141,9 +141,10 @@ install_bitwarden() {
     # Install the Bitwarden CLI.
     echo "Installing the Bitwarden CLI..."
     local BITWARDEN_CLI_URL="https://vault.bitwarden.com/download/?app=cli&platform=linux"
+    local INSTALL_DIR="${HOME}/.local/bin/"
 
     curl -L -o /tmp/bitwarden-cli.zip "${BITWARDEN_CLI_URL}"
-    sudo unzip /tmp/bitwarden-cli.zip -d /usr/local/bin/
+    unzip /tmp/bitwarden-cli.zip -d ${INSTALL_DIR}
     rm /tmp/bitwarden-cli.zip
 
     # Install bash completion.
