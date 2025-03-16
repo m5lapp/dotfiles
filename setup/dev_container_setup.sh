@@ -176,6 +176,21 @@ install_cilium() {
     cilium completion bash | sudo tee /etc/bash_completion.d/cilium > /dev/null
 }
 
+install_filen() {
+    # Check if the cilium binary is already installed and executable.
+    command_exists filen && return
+
+    local FILEN_BINARY_LOCATION="${HOME}/.local/bin/filen"
+    local FILEN_CLI_ARCH="x64"
+    if [ "$(uname -m)" = "aarch64" ]; then FILEN_CLI_ARCH="arm64"; fi
+    local FILEN_CLI_RELEASE=$(curl -s https://api.github.com/repos/FilenCloudDienste/filen-cli/releases/latest)
+    local FILEN_CLI_VERSION=$(echo "${FILEN_CLI_RELEASE}" | grep "tag_name" | cut -d \" -f 4)
+    local DOWNLOAD_URL=$(echo "${FILEN_CLI_RELEASE}" | grep "browser_download_url.*linux-${FILEN_CLI_ARCH}" | cut -d \" -f 4)
+
+    curl -L -o ${FILEN_BINARY_LOCATION} ${DOWNLOAD_URL}
+    chmod +x ${FILEN_BINARY_LOCATION}
+}
+
 install_flux() {
     # Check if the flux binary is already installed and executable.
     command_exists flux && return
