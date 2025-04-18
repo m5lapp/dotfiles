@@ -11,6 +11,7 @@ fi
 # These are installed here rather than directly into the container as they need
 # to be installed or modify the home directory which is mounted from the local
 # file system.
+install_filen_cli
 install_fly
 install_golang_tools
 install_linkerd

@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-toolbox:40
+FROM registry.fedoraproject.org/fedora-toolbox:42
 
 LABEL com.github.containers.toolbox="true" \
       usage="This image is meant to be used with the distrobox or toolbox commands" \
@@ -10,12 +10,11 @@ WORKDIR /tmp/
 COPY setup/dev_container_setup.sh /opt/setup/dev_container_setup.sh
 
 RUN source /opt/setup/dev_container_setup.sh && \
-    update_dnf && \
+    `# update_dnf` && \
     install_system_packages_dnf && \
     install_bitwarden && \
     install_chezmoi && \
     install_cilium && \
-    install_filen_cli && \
     install_flux && \
     install_gcloud_dnf && \
     install_golang && \
@@ -25,9 +24,10 @@ RUN source /opt/setup/dev_container_setup.sh && \
     install_kubeseal && \
     install_latex_dnf && \
     install_neovim_dnf && \
+    `# install_oci` && \
     install_psql_client_dnf && \
     install_taskfile && \
     install_terraform && \
     install_starship && \
     install_veracrypt_rpm
-    #install_oci && \
+
