@@ -52,6 +52,6 @@
     "editor.cursorSurroundingLines": 999,
 
     // Theme configuration.
-    "workbench.colorTheme": "Catppuccin Macchiato",
-    "workbench.iconTheme": "catppuccin-macchiato"
+    // "workbench.colorTheme": "Catppuccin Macchiato",
+    // "workbench.iconTheme": "catppuccin-macchiato"
 }
