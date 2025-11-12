@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 CONTAINER_NAME="dev-box"
 CONTAINER_REGISTRY="docker.io"
@@ -396,6 +396,19 @@ install_linkerd() {
 
     # Install bash completion.
     linkerd completion bash | sudo tee /etc/bash_completion.d/linkerd > /dev/null
+}
+
+install_neonctl() {
+    # Check if the neon binary is already installed and executable.
+    command_exists neon && return
+
+    echo "Installing neonctl..."
+    curl -Lo neon "https://github.com/neondatabase/neonctl/releases/latest/download/neonctl-linux-x64"
+    sudo install -o root -g root -m 0755 neon /usr/local/bin/neon
+    rm neon
+
+    # Install bash completion.
+    neon completion | sudo tee /etc/bash_completion.d/neon > /dev/null
 }
 
 install_neovim_dnf() {
