@@ -97,11 +97,10 @@ export KUBE_EDITOR=$(which vi)
 # Decode and print all of the secret values in a given Kubernetes Secret.
 # Optionally, a namespace can be passed as the second parameter.
 secret() {
-    kubecolor get secret ${@} -o go-template='
+    kubectl get secret ${@} -o go-template='
         {{- range $k, $v := .data }}
-            {{- printf "%s: " $k }}
+            {{- printf "%s: " $k -}}
             {{- if $v }}{{ base64decode $v }}{{ else }}{{ $v }}{{ end }}
-            {{- printf "\n\n" }}
         {{- end }}'
 }
 
