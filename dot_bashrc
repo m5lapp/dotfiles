@@ -97,19 +97,12 @@ export KUBE_EDITOR=$(which vi)
 # Decode and print all of the secret values in a given Kubernetes Secret.
 # Optionally, a namespace can be passed as the second parameter.
 secret() {
-    local SECRET_NAME=${1}
-    local NAMESPACE=${2:-$(
-        kubectl config view --minify \
-            -o go-template='{{(index .contexts 0).context.namespace}}'
-    )}
-
-    kubectl get secrets ${SECRET_NAME} -n ${NAMESPACE} \
-    -o go-template='
-        {{- range $k, $v := .data }}
-            {{- printf "%s: " $k }}
-            {{- if $v }}{{ base64decode $v }}{{ else }}{{ $v }}{{ end }}
-            {{- printf "\n" }}
-        {{- end }}'
+    kubecolor get secret ${@} -o go-template='
+        {{- range $k, $v := .data }}
+            {{- printf "%s: " $k }}
+            {{- if $v }}{{ base64decode $v }}{{ else }}{{ $v }}{{ end }}
+            {{- printf "\n\n" }}
+        {{- end }}'
 }
 
 # Linkerd
