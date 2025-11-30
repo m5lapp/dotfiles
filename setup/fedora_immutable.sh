@@ -17,10 +17,13 @@ add_flatpaks () {
         com.vscodium.codium \
         md.obsidian.Obsidian \
         org.chromium.Chromium \
+        org.freac.freac \
         org.freedesktop.Sdk.Extension.golang \
+        org.kde.amarok \
         org.kde.falkon \
         org.libreoffice.LibreOffice \
         org.mozilla.firefox \
+        org.raspberrypi.rpi-imager \
         org.subsurface_divelog.Subsurface
 
     # Look in /etc/os-release to check if we're running Fedora Sericea
@@ -38,6 +41,7 @@ add_flatpaks_sericea() {
     flatpak install flathub \
         org.kde.dolphin \
         org.kde.kalk \
+        org.kde.kate \
         org.kde.kwrite \
         org.kde.okular
 }

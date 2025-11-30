@@ -3,7 +3,7 @@
 CONTAINER_NAME="dev-box"
 CONTAINER_REGISTRY="docker.io"
 CONTAINER_REGISTRY_USER="rareb1t"
-CONTAINER_TAG="42.0"
+CONTAINER_TAG="44.0"
 CONTAINER_IMAGE="${CONTAINER_REGISTRY}/${CONTAINER_REGISTRY_USER}/dev-container"
 GITHUB_USERNAME="m5lapp"
 
@@ -232,10 +232,10 @@ install_gcloud_dnf() {
 
     # Install additional components you might want.
     sudo dnf install -y \
-        google-cloud-cli-app-engine-go \
-        google-cloud-cli-app-engine-grpc \
-        google-cloud-cli-app-engine-python \
-        google-cloud-cli-app-engine-python-extras \
+        `# google-cloud-cli-app-engine-go` \
+        `# google-cloud-cli-app-engine-grpc` \
+        `# google-cloud-cli-app-engine-python` \
+        `# google-cloud-cli-app-engine-python-extras` \
         google-cloud-cli-docker-credential-gcr \
         `# google-cloud-cli-firestore-emulator` \
         google-cloud-cli-package-go-module
@@ -271,7 +271,7 @@ install_golang_tools() {
     go install github.com/golang/protobuf/protoc-gen-go@latest
 
     # Install the golang-migrate CLI.
-    curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz | tar -xvz migrate
+    curl -L https://github.com/golang-migrate/migrate/releases/download/v4.19.1/migrate.linux-amd64.tar.gz | tar -xvz migrate
     mv migrate ${GOPATH}/bin/migrate
 }
 
@@ -305,7 +305,7 @@ install_k9s() {
     command_exists k9s && return
 
     local K9S_TARBALL="k9s_Linux_amd64.tar.gz"
-    local K9S_VERSION="0.50.3"
+    local K9S_VERSION="0.50.16"
 
     echo "Downloading and installing K9s version ${K9S_VERSION}."
     curl -LO "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/${K9S_TARBALL}"
@@ -364,7 +364,7 @@ install_kubeseal() {
     # Check if the kubeseal binary is already installed and executable.
     command_exists kubeseal && return
 
-    local KUBESEAL_VERSION="0.29.0"
+    local KUBESEAL_VERSION="0.33.1"
     local DOWNLOAD_URL="https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION:?}/kubeseal-${KUBESEAL_VERSION:?}-linux-amd64.tar.gz"
 
     echo "Installing the kubeseal CLI version ${KUBESEAL_VERSION}..."
@@ -496,7 +496,7 @@ install_taskfile() {
     # Check if the go-task binary is already installed and executable.
     command_exists task && return
 
-    local DOWNLOAD_URL="https://github.com/go-task/task/releases/download/v3.42.1/task_linux_amd64.tar.gz"
+    local DOWNLOAD_URL="https://github.com/go-task/task/releases/download/v3.45.5/task_linux_amd64.tar.gz"
     local INSTALL_DIR="${HOME}/.local/bin/"
 
     echo "Installing Taskfile (task) to ${INSTALL_DIR}..."
@@ -522,7 +522,7 @@ install_terraform() {
     # There is a Github gist available to look up the latest version number for
     # Terraform, but it depends on `jq` which is not guarenteed to be installed.
     # See: https://gist.github.com/danisla/0a394c75bddce204688b21e28fd2fea5
-    local TF_VERSION="1.10.5"
+    local TF_VERSION="1.14.0"
     echo "Installing Terraform version ${TF_VERSION}..."
     local TF_FILE_NAME="terraform_${TF_VERSION}_linux_amd64.zip"
     curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/${TF_FILE_NAME}
@@ -551,7 +551,8 @@ install_veracrypt_rpm() {
     command_exists veracrypt && return
 
     # https://www.veracrypt.fr/en/Downloads.html
-    local DOWNLOAD_URL="https://launchpad.net/veracrypt/trunk/1.26.20/+download/veracrypt-console-1.26.20-CentOS-8-x86_64.rpm"
+    local VERSION="1.26.24"
+    local DOWNLOAD_URL="https://launchpad.net/veracrypt/trunk/${VERSION}/+download/veracrypt-console-${VERSION}-Fedora-40-x86_64.rpm"
     curl -L -o /tmp/veracrypt-cli.rpm "${DOWNLOAD_URL}"
 
     sudo dnf -y install fuse-devel
