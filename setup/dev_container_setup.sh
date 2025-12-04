@@ -267,8 +267,9 @@ install_golang_tools() {
 
     echo "Install Golang tools/dependants..."
     local GOPATH="${HOME}/.local/share/go"
-    go install golang.org/x/tools/gopls@latest
+    go install github.com/air-verse/air@latest
     go install github.com/golang/protobuf/protoc-gen-go@latest
+    go install golang.org/x/tools/gopls@latest
 
     # Install the golang-migrate CLI.
     curl -L https://github.com/golang-migrate/migrate/releases/download/v4.19.1/migrate.linux-amd64.tar.gz | tar -xvz migrate
