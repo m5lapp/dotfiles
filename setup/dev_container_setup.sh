@@ -136,6 +136,14 @@ install_act() {
     curl --proto '=https' --tlsv1.2 -sSf ${ACT_CLI_URL} | sudo bash -s -- -b ~/.local/bin
 }
 
+install_ansible() {
+    # Check if the ansible binary is already installed and executable.
+    command_exists ansible && return
+
+    echo "Installing Ansible via DNF..."
+    sudo dnf install -y ansible
+}
+
 install_bitwarden() {
     # Check if the Bitwarden CLI is already installed and executable.
     command_exists bw && return
@@ -523,7 +531,7 @@ install_terraform() {
     # There is a Github gist available to look up the latest version number for
     # Terraform, but it depends on `jq` which is not guarenteed to be installed.
     # See: https://gist.github.com/danisla/0a394c75bddce204688b21e28fd2fea5
-    local TF_VERSION="1.14.0"
+    local TF_VERSION="1.14.4"
     echo "Installing Terraform version ${TF_VERSION}..."
     local TF_FILE_NAME="terraform_${TF_VERSION}_linux_amd64.zip"
     curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/${TF_FILE_NAME}
