@@ -278,6 +278,7 @@ install_golang_tools() {
     go install github.com/air-verse/air@latest
     go install github.com/golang/protobuf/protoc-gen-go@latest
     go install golang.org/x/tools/gopls@latest
+    go install honnef.co/go/tools/cmd/staticcheck@latest
 
     # Install the golang-migrate CLI.
     curl -L https://github.com/golang-migrate/migrate/releases/download/v4.19.1/migrate.linux-amd64.tar.gz | tar -xvz migrate
