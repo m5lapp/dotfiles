@@ -7,7 +7,11 @@ return {
     'nvim-tree/nvim-web-devicons',
   },
   config = function()
-    require('nvim-tree').setup({})
+    require('nvim-tree').setup({
+      view = {
+        width = 35,
+      },
+    })
     vim.keymap.set('n', '<C-n>', '<cmd>NvimTreeToggle<CR>', { desc = 'nvimtree toggle window' })
     vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeFocus<CR>', { desc = 'nvimtree focus window' })
   end,
