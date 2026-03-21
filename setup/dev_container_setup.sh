@@ -3,7 +3,7 @@
 CONTAINER_NAME="dev-box"
 CONTAINER_REGISTRY="docker.io"
 CONTAINER_REGISTRY_USER="rareb1t"
-CONTAINER_TAG="44.0"
+CONTAINER_TAG="44.1"
 CONTAINER_IMAGE="${CONTAINER_REGISTRY}/${CONTAINER_REGISTRY_USER}/dev-container"
 GITHUB_USERNAME="m5lapp"
 
@@ -22,9 +22,9 @@ push_dev_container_image() {
         read -p "Token: " CONTAINER_REGISTRY_ACCESS_TOKEN
     fi
 
-	${CONTAINER_CMD} login ${CONTAINER_REGISTRY} \
-		--username ${CONTAINER_REGISTRY_USER} \
-		--password ${CONTAINER_REGISTRY_ACCESS_TOKEN}
+    ${CONTAINER_CMD} login ${CONTAINER_REGISTRY} \
+        --username ${CONTAINER_REGISTRY_USER} \
+        --password ${CONTAINER_REGISTRY_ACCESS_TOKEN}
 
     ${CONTAINER_CMD} push ${CONTAINER_IMAGE}:${CONTAINER_TAG}
 }
@@ -314,8 +314,9 @@ install_k9s() {
     # Check if the k9s binary is already installed and executable.
     command_exists k9s && return
 
+    # https://github.com/derailed/k9s/releases
     local K9S_TARBALL="k9s_Linux_amd64.tar.gz"
-    local K9S_VERSION="0.50.16"
+    local K9S_VERSION="0.50.18"
 
     echo "Downloading and installing K9s version ${K9S_VERSION}."
     curl -LO "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/${K9S_TARBALL}"
@@ -374,7 +375,7 @@ install_kubeseal() {
     # Check if the kubeseal binary is already installed and executable.
     command_exists kubeseal && return
 
-    local KUBESEAL_VERSION="0.33.1"
+    local KUBESEAL_VERSION="0.36.1"
     local DOWNLOAD_URL="https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION:?}/kubeseal-${KUBESEAL_VERSION:?}-linux-amd64.tar.gz"
 
     echo "Installing the kubeseal CLI version ${KUBESEAL_VERSION}..."
@@ -506,7 +507,7 @@ install_taskfile() {
     # Check if the go-task binary is already installed and executable.
     command_exists task && return
 
-    local DOWNLOAD_URL="https://github.com/go-task/task/releases/download/v3.45.5/task_linux_amd64.tar.gz"
+    local DOWNLOAD_URL="https://github.com/go-task/task/releases/download/v3.49.1/task_linux_amd64.tar.gz"
     local INSTALL_DIR="${HOME}/.local/bin/"
 
     echo "Installing Taskfile (task) to ${INSTALL_DIR}..."
@@ -532,7 +533,7 @@ install_terraform() {
     # There is a Github gist available to look up the latest version number for
     # Terraform, but it depends on `jq` which is not guarenteed to be installed.
     # See: https://gist.github.com/danisla/0a394c75bddce204688b21e28fd2fea5
-    local TF_VERSION="1.14.4"
+    local TF_VERSION="1.14.7"
     echo "Installing Terraform version ${TF_VERSION}..."
     local TF_FILE_NAME="terraform_${TF_VERSION}_linux_amd64.zip"
     curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/${TF_FILE_NAME}
