@@ -503,6 +503,18 @@ install_starship() {
     starship completions bash | sudo tee /etc/bash_completion.d/starship > /dev/null
 }
 
+install_talosctl() {
+    # Check if the talosctl binary is already installed and executable.
+    command_exists talosctl && return
+
+    local BIN_DIR="/usr/local/bin/"
+    echo "Installing the talosctl binary to ${BIN_DIR}"
+    curl -sL https://talos.dev/install | INSTALLPATH="${BIN_DIR}" sh
+
+    # Install bash completion.
+    talosctl completion bash | sudo tee /etc/bash_completion.d/talosctl > /dev/null
+}
+
 install_taskfile() {
     # Check if the go-task binary is already installed and executable.
     command_exists task && return

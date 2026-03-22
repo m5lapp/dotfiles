@@ -26,6 +26,7 @@ RUN source /opt/setup/dev_container_setup.sh && \
     install_neovim_dnf && \
     `# install_oci` && \
     install_psql_client_dnf && \
+    install_talosctl && \
     install_taskfile && \
     install_terraform && \
     install_starship && \
