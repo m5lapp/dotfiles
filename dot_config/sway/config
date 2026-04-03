@@ -311,9 +311,7 @@ bindsym $mod+r mode "resize"
 # Default application workspaces:
 #
 exec flatpak run org.mozilla.firefox
-assign [app_id="org.mozilla.firefox"] $workspace01
-exec foot
-assign [app_id="foot"] $workspace02
+assign [class="firefox"] $workspace01
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
 #  - /etc/sway/config.d
@@ -336,4 +334,3 @@ assign [app_id="foot"] $workspace02
 # the trick, it's all in the `wordexp(3)`.
 #
 include '$(/usr/libexec/sway/layered-include "/usr/share/sway/config.d/*.conf" "/etc/sway/config.d/*.conf" "${XDG_CONFIG_HOME:-$HOME/.config}/sway/config.d/*.conf")'
-
